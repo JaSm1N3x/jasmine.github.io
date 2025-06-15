@@ -207,7 +207,12 @@
             });
             
             // 计算成绩
-           calculateBtn.addEventListener('click', function() {
+          calculateBtn.addEventListener('click', function() {
+    // 清除之前的错误提示
+    document.querySelectorAll('.border-red-500').forEach(el => {
+        el.classList.remove('border-red-500');
+    });
+    
     const rows = courseTableBody.querySelectorAll('tr');
     let scores = [];
     let credits = [];
@@ -222,35 +227,15 @@
         if (isNaN(score) || score < 0 || score > 100) {
             isValid = false;
             inputs[0].classList.add('border-red-500');
-            const scoreError = inputs[0].parentNode.querySelector('.score-error');
-            if (!scoreError) {
-                const msg = document.createElement('div');
-                msg.className = 'score-error text-red-500 text-xs mt-1';
-                msg.textContent = '成绩必须在0-100之间';
-                inputs[0].parentNode.appendChild(msg);
-            }
         } else {
-            const scoreError = inputs[0].parentNode.querySelector('.score-error');
-            if (scoreError) inputs[0].parentNode.removeChild(scoreError);
-            inputs[0].classList.remove('border-red-500');
             scores.push(score);
         }
         
-        // 学分验证
+        // 学分验证（允许0.01及以上的小数）
         if (isNaN(credit) || credit <= 0) {
             isValid = false;
             inputs[1].classList.add('border-red-500');
-            const creditError = inputs[1].parentNode.querySelector('.credit-error');
-            if (!creditError) {
-                const msg = document.createElement('div');
-                msg.className = 'credit-error text-red-500 text-xs mt-1';
-                msg.textContent = '学分必须大于0';
-                inputs[1].parentNode.appendChild(msg);
-            }
         } else {
-            const creditError = inputs[1].parentNode.querySelector('.credit-error');
-            if (creditError) inputs[1].parentNode.removeChild(creditError);
-            inputs[1].classList.remove('border-red-500');
             credits.push(credit);
         }
     });
@@ -260,27 +245,12 @@
     if (isNaN(qualityScore) || qualityScore < 0 || qualityScore > 100) {
         isValid = false;
         qualityScoreEl.classList.add('border-red-500');
-        const qualityError = qualityScoreEl.nextElementSibling;
-        if (!qualityError || !qualityError.classList.contains('text-red-500')) {
-            const msg = document.createElement('div');
-            msg.className = 'text-red-500 text-xs mt-1';
-            msg.textContent = '综合素质得分必须在0-100之间';
-            qualityScoreEl.parentNode.appendChild(msg);
-        }
-    } else {
-        const qualityError = qualityScoreEl.nextElementSibling;
-        if (qualityError && qualityError.classList.contains('text-red-500')) {
-            qualityScoreEl.parentNode.removeChild(qualityError);
-        }
-        qualityScoreEl.classList.remove('border-red-500');
     }
     
     if (!isValid) {
-        showNotification('请检查输入是否有效', 'error');
+        showNotification('请检查输入是否有效（学分需大于0）', 'error');
         return;
     }
-    
-    // ------------------- 关键修复区域 -------------------
     // 计算加权平均分（移到事件处理函数内部）
     const totalCredits = credits.reduce((sum, credit) => sum + credit, 0);
     const weightedSum = scores.reduce((sum, score, index) => sum + (score * credits[index]), 0);
