@@ -236,7 +236,7 @@
             scores.push(score);
         }
         
-        // 学分验证（关键修改处）
+        // 学分验证
         if (isNaN(credit) || credit <= 0) {
             isValid = false;
             inputs[1].classList.add('border-red-500');
@@ -280,36 +280,34 @@
         return;
     }
     
-    // 计算逻辑保持不变...
+    // ------------------- 关键修复区域 -------------------
+    // 计算加权平均分（移到事件处理函数内部）
+    const totalCredits = credits.reduce((sum, credit) => sum + credit, 0);
+    const weightedSum = scores.reduce((sum, score, index) => sum + (score * credits[index]), 0);
+    const weightedAverage = totalCredits > 0 ? weightedSum / totalCredits : 0;
+    
+    // 计算综合成绩（移到事件处理函数内部）
+    const finalScore = (weightedAverage * 0.80) + (qualityScore * 0.20);
+    
+    // 显示结果并添加动画（移到事件处理函数内部）
+    weightedAverageEl.textContent = weightedAverage.toFixed(4);
+    finalScoreEl.textContent = finalScore.toFixed(4);
+    
+    resultsDiv.classList.remove('hidden');
+    resultsDiv.style.opacity = '0';
+    resultsDiv.style.transform = 'translateY(20px)';
+    setTimeout(() => {
+        resultsDiv.style.opacity = '1';
+        resultsDiv.style.transform = 'translateY(0)';
+        resultsDiv.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    }, 50);
+    
+    // 平滑滚动到结果（移到事件处理函数内部）
+    resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    
+    showNotification('计算成功！', 'success');
+    // ---------------------------------------------------
 });
-                
-                // 计算加权平均分
-                const totalCredits = credits.reduce((sum, credit) => sum + credit, 0);
-                const weightedSum = scores.reduce((sum, score, index) => sum + (score * credits[index]), 0);
-                const weightedAverage = totalCredits > 0 ? weightedSum / totalCredits : 0;
-                
-                // 计算综合成绩
-                const finalScore = (weightedAverage * 0.80) + (qualityScore * 0.20);
-                
-                // 显示结果并添加动画
-                weightedAverageEl.textContent = weightedAverage.toFixed(4);
-                finalScoreEl.textContent = finalScore.toFixed(4);
-                
-                resultsDiv.classList.remove('hidden');
-                resultsDiv.style.opacity = '0';
-                resultsDiv.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    resultsDiv.style.opacity = '1';
-                    resultsDiv.style.transform = 'translateY(0)';
-                    resultsDiv.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                }, 50);
-                
-                // 平滑滚动到结果
-                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                
-                showNotification('计算成功！', 'success');
-            });
-            
             // 通知提示
             function showNotification(message, type = 'info') {
                 // 创建通知元素
