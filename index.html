@@ -183,7 +183,7 @@
                             <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300" min="0" max="100" value="80">
                         </td>
                         <td class="py-3 px-4 border-b">
-                            <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300" min="0.5" step="0.5" value="3">
+                            <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300" min="0.5" step="0.01" value="3">
                         </td>
                     `;
                     courseTableBody.appendChild(newRow);
@@ -258,8 +258,8 @@
                 const finalScore = (weightedAverage * 0.80) + (qualityScore * 0.20);
                 
                 // 显示结果并添加动画
-                weightedAverageEl.textContent = weightedAverage.toFixed(2);
-                finalScoreEl.textContent = finalScore.toFixed(2);
+                weightedAverageEl.textContent = weightedAverage.toFixed(4);
+                finalScoreEl.textContent = finalScore.toFixed(4);
                 
                 resultsDiv.classList.remove('hidden');
                 resultsDiv.style.opacity = '0';
