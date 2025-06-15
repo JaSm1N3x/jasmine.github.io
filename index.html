@@ -95,7 +95,7 @@
                                     <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300" min="0" max="100" value="90">
                                 </td>
                                 <td class="py-3 px-4 border-b">
-                                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300" min="0" step="0.01" value="4">
+                                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300" step="0.01" value="4">
                                 </td>
                             </tr>
                         </tbody>
@@ -152,175 +152,175 @@
 
     <!-- JavaScript -->
     <script>
-       document.addEventListener('DOMContentLoaded', function() {
-    // 元素引用
-    const courseTableBody = document.getElementById('course-table-body');
-    const addCourseBtn = document.getElementById('add-course');
-    const removeCourseBtn = document.getElementById('remove-course');
-    const calculateBtn = document.getElementById('calculate');
-    const resultsDiv = document.getElementById('results');
-    const weightedAverageEl = document.getElementById('weighted-average');
-    const finalScoreEl = document.getElementById('final-score');
-    const qualityScoreEl = document.getElementById('quality-score');
-    
-    // 课程计数器
-    let courseCount = 2;
-    
-    // 启用/禁用删除按钮
-    function updateRemoveButton() {
-        removeCourseBtn.disabled = courseCount <= 1;
-    }
-    
-    // 添加课程
-    addCourseBtn.addEventListener('click', function() {
-        if (courseCount < 200) { // 限制最大课程数
-            courseCount++;
-            const newRow = document.createElement('tr');
-            newRow.className = 'hover:bg-gray-50 transition-all-300';
-            newRow.innerHTML = `
-                <td class="py-3 px-4 border-b">课程 ${courseCount}</td>
-                <td class="py-3 px-4 border-b">
-                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300" min="0" max="100" value="80">
-                </td>
-                <td class="py-3 px-4 border-b">
-                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300" min="0" step="0.01" value="3">
-                </td>
-            `;
-            courseTableBody.appendChild(newRow);
-            updateRemoveButton();
-        } else {
-            showNotification('最多只能添加200门课程', 'warning');
-        }
-    });
-    
-    // 删除课程
-    removeCourseBtn.addEventListener('click', function() {
-        if (courseCount > 1) {
-            const rows = courseTableBody.querySelectorAll('tr');
-            const lastRow = rows[rows.length - 1];
-            courseTableBody.removeChild(lastRow);
-            courseCount--;
-            updateRemoveButton();
-        } else {
-            showNotification('至少需要保留1门课程', 'warning');
-        }
-    });
-    
-    // 计算成绩 - 合并为一个完整的事件处理函数
-    calculateBtn.addEventListener('click', function() {
-        // 清除之前的错误提示
-        document.querySelectorAll('.border-red-500').forEach(el => {
-            el.classList.remove('border-red-500');
-        });
-        
-        const rows = courseTableBody.querySelectorAll('tr');
-        let scores = [];
-        let credits = [];
-        let isValid = true;
-        
-        rows.forEach(row => {
-            const inputs = row.querySelectorAll('input');
-            const score = parseFloat(inputs[0].value);
-            const credit = parseFloat(inputs[1].value);
+        document.addEventListener('DOMContentLoaded', function() {
+            // 元素引用
+            const courseTableBody = document.getElementById('course-table-body');
+            const addCourseBtn = document.getElementById('add-course');
+            const removeCourseBtn = document.getElementById('remove-course');
+            const calculateBtn = document.getElementById('calculate');
+            const resultsDiv = document.getElementById('results');
+            const weightedAverageEl = document.getElementById('weighted-average');
+            const finalScoreEl = document.getElementById('final-score');
+            const qualityScoreEl = document.getElementById('quality-score');
             
-            // 成绩验证
-            if (isNaN(score) || score < 0 || score > 100) {
-                isValid = false;
-                inputs[0].classList.add('border-red-500');
-            } else {
-                scores.push(score);
+            // 课程计数器
+            let courseCount = 2;
+            
+            // 启用/禁用删除按钮
+            function updateRemoveButton() {
+                removeCourseBtn.disabled = courseCount <= 1;
             }
             
-            // 学分验证（允许0.01及以上的小数）
-            if (isNaN(credit) || credit <= 0) {
-                isValid = false;
-                inputs[1].classList.add('border-red-500');
-            } else {
-                credits.push(credit);
+            // 添加课程
+            addCourseBtn.addEventListener('click', function() {
+                if (courseCount < 200) { // 限制最大课程数
+                    courseCount++;
+                    const newRow = document.createElement('tr');
+                    newRow.className = 'hover:bg-gray-50 transition-all-300';
+                    newRow.innerHTML = `
+                        <td class="py-3 px-4 border-b">课程 ${courseCount}</td>
+                        <td class="py-3 px-4 border-b">
+                            <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300" min="0" max="100" value="80">
+                        </td>
+                        <td class="py-3 px-4 border-b">
+                            <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300" step="0.01" value="3">
+                        </td>
+                    `;
+                    courseTableBody.appendChild(newRow);
+                    updateRemoveButton();
+                } else {
+                    showNotification('最多只能添加200门课程', 'warning');
+                }
+            });
+            
+            // 删除课程
+            removeCourseBtn.addEventListener('click', function() {
+                if (courseCount > 1) {
+                    const rows = courseTableBody.querySelectorAll('tr');
+                    const lastRow = rows[rows.length - 1];
+                    courseTableBody.removeChild(lastRow);
+                    courseCount--;
+                    updateRemoveButton();
+                } else {
+                    showNotification('至少需要保留1门课程', 'warning');
+                }
+            });
+            
+            // 计算成绩
+            calculateBtn.addEventListener('click', function() {
+                // 清除之前的错误提示
+                document.querySelectorAll('.border-red-500').forEach(el => {
+                    el.classList.remove('border-red-500');
+                });
+                
+                const rows = courseTableBody.querySelectorAll('tr');
+                let scores = [];
+                let credits = [];
+                let isValid = true;
+                
+                rows.forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    const score = parseFloat(inputs[0].value);
+                    const credit = parseFloat(inputs[1].value);
+                    
+                    // 成绩验证
+                    if (isNaN(score) || score < 0 || score > 100) {
+                        isValid = false;
+                        inputs[0].classList.add('border-red-500');
+                    } else {
+                        scores.push(score);
+                    }
+                    
+                    // 学分验证（允许0.01及以上的小数）
+                    if (isNaN(credit) || credit <= 0) {
+                        isValid = false;
+                        inputs[1].classList.add('border-red-500');
+                    } else {
+                        credits.push(credit);
+                    }
+                });
+                
+                // 综合素质验证
+                const qualityScore = parseFloat(qualityScoreEl.value);
+                if (isNaN(qualityScore) || qualityScore < 0 || qualityScore > 100) {
+                    isValid = false;
+                    qualityScoreEl.classList.add('border-red-500');
+                }
+                
+                if (!isValid) {
+                    showNotification('请检查输入是否有效（学分需大于0）', 'error');
+                    return;
+                }
+                
+                // 计算加权平均分
+                const totalCredits = credits.reduce((sum, credit) => sum + credit, 0);
+                const weightedSum = scores.reduce((sum, score, index) => sum + (score * credits[index]), 0);
+                const weightedAverage = totalCredits > 0 ? weightedSum / totalCredits : 0;
+                
+                // 计算综合成绩
+                const finalScore = (weightedAverage * 0.80) + (qualityScore * 0.20);
+                
+                // 显示结果并添加动画
+                resultsDiv.classList.remove('hidden');
+                resultsDiv.style.opacity = '0';
+                resultsDiv.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    resultsDiv.style.opacity = '1';
+                    resultsDiv.style.transform = 'translateY(0)';
+                    resultsDiv.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                }, 50);
+                
+                // 显示结果（保留四位小数）
+                weightedAverageEl.textContent = weightedAverage.toFixed(4);
+                finalScoreEl.textContent = finalScore.toFixed(4);
+                
+                // 平滑滚动到结果
+                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                showNotification('计算成功！', 'success');
+            });
+            
+            // 通知提示
+            function showNotification(message, type = 'info') {
+                // 创建通知元素
+                const notification = document.createElement('div');
+                notification.className = `fixed top-4 right-4 px-4 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 ease-in-out translate-x-full opacity-0`;
+                
+                // 设置样式
+                if (type === 'success') {
+                    notification.classList.add('bg-green-500', 'text-white');
+                    notification.innerHTML = `<i class="fa fa-check-circle mr-2"></i>${message}`;
+                } else if (type === 'error') {
+                    notification.classList.add('bg-red-500', 'text-white');
+                    notification.innerHTML = `<i class="fa fa-exclamation-circle mr-2"></i>${message}`;
+                } else if (type === 'warning') {
+                    notification.classList.add('bg-yellow-500', 'text-white');
+                    notification.innerHTML = `<i class="fa fa-exclamation-triangle mr-2"></i>${message}`;
+                } else {
+                    notification.classList.add('bg-blue-500', 'text-white');
+                    notification.innerHTML = `<i class="fa fa-info-circle mr-2"></i>${message}`;
+                }
+                
+                // 添加到页面
+                document.body.appendChild(notification);
+                
+                // 显示动画
+                setTimeout(() => {
+                    notification.classList.remove('translate-x-full', 'opacity-0');
+                    notification.classList.add('translate-x-0', 'opacity-100');
+                }, 10);
+                
+                // 自动关闭
+                setTimeout(() => {
+                    notification.classList.remove('translate-x-0', 'opacity-100');
+                    notification.classList.add('translate-x-full', 'opacity-0');
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
             }
         });
-        
-        // 综合素质验证
-        const qualityScore = parseFloat(qualityScoreEl.value);
-        if (isNaN(qualityScore) || qualityScore < 0 || qualityScore > 100) {
-            isValid = false;
-            qualityScoreEl.classList.add('border-red-500');
-        }
-        
-        if (!isValid) {
-            showNotification('请检查输入是否有效（学分需大于0）', 'error');
-            return;
-        }
-        
-        // 计算加权平均分
-        const totalCredits = credits.reduce((sum, credit) => sum + credit, 0);
-        const weightedSum = scores.reduce((sum, score, index) => sum + (score * credits[index]), 0);
-        const weightedAverage = totalCredits > 0 ? weightedSum / totalCredits : 0;
-        
-        // 计算综合成绩
-        const finalScore = (weightedAverage * 0.80) + (qualityScore * 0.20);
-        
-        // 显示结果并添加动画
-        resultsDiv.classList.remove('hidden');
-        resultsDiv.style.opacity = '0';
-        resultsDiv.style.transform = 'translateY(20px)';
-        setTimeout(() => {
-            resultsDiv.style.opacity = '1';
-            resultsDiv.style.transform = 'translateY(0)';
-            resultsDiv.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        }, 50);
-        
-        // 显示结果
-        weightedAverageEl.textContent = weightedAverage.toFixed(4);
-        finalScoreEl.textContent = finalScore.toFixed(4);
-        
-        // 平滑滚动到结果
-        resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        
-        showNotification('计算成功！', 'success');
-    });
-    
-    // 通知提示
-    function showNotification(message, type = 'info') {
-        // 创建通知元素
-        const notification = document.createElement('div');
-        notification.className = `fixed top-4 right-4 px-4 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 ease-in-out translate-x-full opacity-0`;
-        
-        // 设置样式
-        if (type === 'success') {
-            notification.classList.add('bg-green-500', 'text-white');
-            notification.innerHTML = `<i class="fa fa-check-circle mr-2"></i>${message}`;
-        } else if (type === 'error') {
-            notification.classList.add('bg-red-500', 'text-white');
-            notification.innerHTML = `<i class="fa fa-exclamation-circle mr-2"></i>${message}`;
-        } else if (type === 'warning') {
-            notification.classList.add('bg-yellow-500', 'text-white');
-            notification.innerHTML = `<i class="fa fa-exclamation-triangle mr-2"></i>${message}`;
-        } else {
-            notification.classList.add('bg-blue-500', 'text-white');
-            notification.innerHTML = `<i class="fa fa-info-circle mr-2"></i>${message}`;
-        }
-        
-        // 添加到页面
-        document.body.appendChild(notification);
-        
-        // 显示动画
-        setTimeout(() => {
-            notification.classList.remove('translate-x-full', 'opacity-0');
-            notification.classList.add('translate-x-0', 'opacity-100');
-        }, 10);
-        
-        // 自动关闭
-        setTimeout(() => {
-            notification.classList.remove('translate-x-0', 'opacity-100');
-            notification.classList.add('translate-x-full', 'opacity-0');
-            
-            setTimeout(() => {
-                document.body.removeChild(notification);
-            }, 300);
-        }, 3000);
-    }
-});
     </script>
 </body>
 </html>
