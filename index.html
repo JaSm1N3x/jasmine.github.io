@@ -227,7 +227,7 @@
                         scores.push(score);
                     }
                     
-                    if (isNaN(credit) || credit < 0.5) {
+                    if (isNaN(credit) || credit <=0) {
                         isValid = false;
                         inputs[1].classList.add('border-red-500');
                         setTimeout(() => inputs[1].classList.remove('border-red-500'), 2000);
